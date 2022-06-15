@@ -27,6 +27,8 @@ Thus, the essence of the method lies on the formula:
 
 <p align="center"> <b> <i> INVERSE_JACOBIAN * DELTA_END_POSE = DELTA_ANGLE </i> </b> </p>
 
-where **INVERSE_JACOBIAN** is the inverse Jacobian matrix, **DELTA_END_POSE** is the distance between each **Sub Goals** and **DELTA_ANGLE** is the computed **CHANGE IN ANGLE** required at each time step to reach the **Sub Goals** (and eventually the **Goal Position of End Effector**). For [more](https://homes.cs.washington.edu/~todorov/courses/cseP590/06_JacobianMethods.pdf) about the formula. 
+where **INVERSE_JACOBIAN** is the inverse Jacobian matrix, **DELTA_END_POSE** is the distance between each **Sub Goals** and **DELTA_ANGLE** is the computed **CHANGE IN ANGLE** required at each time step to reach the **Sub Goals** (and eventually the **Goal Position of End Effector**). For [more](https://homes.cs.washington.edu/~todorov/courses/cseP590/06_JacobianMethods.pdf) about the formula. Since the Jacobian matrix is often non-squared, direct inverse is not impossible. Thus, **pseudoinverse** is used instead. The formula then become:
+
+<p align="center"> <b> <i> PSEUDO_INVERSE_JACOBIAN * DELTA_END_POSE = DELTA_ANGLE </i> </b> </p>
 
 

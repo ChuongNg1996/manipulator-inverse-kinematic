@@ -31,4 +31,17 @@ where **INVERSE_JACOBIAN** is the inverse Jacobian matrix, **DELTA_END_POSE** is
 
 <p align="center"> <b> <i> PSEUDO_INVERSE_JACOBIAN * DELTA_END_POSE = DELTA_ANGLE </i> </b> </p>
 
-
+## Installation & Implementation
+* Install Python.
+* [Install ROS](http://wiki.ros.org/melodic/Installation/Ubuntu) (any version).
+* At /usr/home/"name" ("name" is arbitrary), create a ROS workspace. On terminal: 
+   ```sh
+   mkdir -p ~/catkin_ws/src
+   ```
+* Go to the created ROS workspace, clone the repo and build them. On terminal: 
+   ```sh
+   cd ~/catkin_ws/src
+   git clone https://github.com/ChuongNg1996/jetbot-ros-object-following
+   cd ..
+   catkin_make
+   ```

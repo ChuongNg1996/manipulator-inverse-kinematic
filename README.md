@@ -45,3 +45,4 @@ where **INVERSE_JACOBIAN** is the inverse Jacobian matrix, **DELTA_END_POSE** is
    cd ..
    catkin_make
    ```
+* Test the package by releasing point command on topic 

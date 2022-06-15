@@ -24,7 +24,7 @@ The components are derived:
 * **pseudoinverse Jacobian matrix** formulas are mathematically derived based on robot setting before running the program (using symbolic functions, [diff()](https://www.mathworks.com/help/matlab/ref/diff.html) for partial derivative and [pinv()](https://www.mathworks.com/help/matlab/ref/pinv.html) for Moore-Penrose pseudoinverse in MATLAB).
 
 Thus, the essence of the method lies on the formula: 
-<p align="center"> INVERSE_JACOBIAN * DELTA_END_POSE = DELTA_ANGLE  </p>
+<p align="center"> <b>INVERSE_JACOBIAN * DELTA_END_POSE = DELTA_ANGLE</b>  </p>
 where **INVERSE_JACOBIAN** is the inverse Jacobian matrix, **DELTA_END_POSE** is the distance between each **Sub Goals** and **DELTA_ANGLE** is the computed **CHANGE IN ANGLE** required at each time step to reach the **Sub Goals** (and eventually the **Goal Position of End Effector**). For [more](https://homes.cs.washington.edu/~todorov/courses/cseP590/06_JacobianMethods.pdf) about the formula. 
 
 

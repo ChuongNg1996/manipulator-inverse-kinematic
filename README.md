@@ -45,10 +45,10 @@ where **INVERSE_JACOBIAN** is the inverse Jacobian matrix, **DELTA_END_POSE** is
    cd ..
    catkin_make
    ```
-* Test the package by releasing point command on ROS topic:
-```sh
-rostopic pub -1 /pose_command geometry_msgs/Point "x: 0.4
-y: 0.2
-z: 0.2" 
-```
+* Test the package by releasing point command on ROS topic `/pose_command`:
+   ```sh
+   rostopic pub -1 /pose_command geometry_msgs/Point "x: 0.4
+   y: 0.2
+   z: 0.2" 
+   ```
 

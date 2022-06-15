@@ -46,12 +46,17 @@ where **INVERSE_JACOBIAN** is the inverse Jacobian matrix, **DELTA_END_POSE** is
    cd ..
    catkin_make
    ```
-* Run the example:
+* Run the example. On terminal 1:
    ```sh
    source ~/catkin_ws/devel/setup.bash
    roslaunch ur_gazebo ur3.launch 
    ```
-* Test the package by releasing point command on ROS topic `/pose_command`:
+* On terminal 2:
+   ```sh
+   source ~/catkin_ws/devel/setup.bash
+   rosrun inverse_kinematic_1 inverse_kinematic_1_test 
+   ```
+* Test the package by releasing point command on ROS topic `/pose_command`.On terminal 3:
    ```sh
    rostopic pub -1 /pose_command geometry_msgs/Point "x: 0.4
    y: 0.2

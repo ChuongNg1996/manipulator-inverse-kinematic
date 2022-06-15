@@ -20,5 +20,7 @@ The components are derived:
 * **Goal Position of End Effector** `[xr,yr,zr]` are given by user.
 * **Current Joint Positions** `[theta_1, ..., theta_N]` are read from sensors of each joint.
 * **Current Position of End Effector** `[xf,yf,zf]` is derived from `[theta_1, ..., theta_N]` using **Forward Kinematic**.
-* **Forward Kinematic** formulas are mathematically derived based on robot setting before running the program.
-* **pseudoinverse Jacobian matrix** formulas are mathematically derived based on robot setting before running the program.
+* **Forward Kinematic** formulas are mathematically derived based on robot setting before running the program (using symbolic functions and matrix mutiplication in MATLAB).
+* **pseudoinverse Jacobian matrix** formulas are mathematically derived based on robot setting before running the program (using symbolic functions, [diff()](https://www.mathworks.com/help/matlab/ref/diff.html) for partial derivative and [pinv()](https://www.mathworks.com/help/matlab/ref/pinv.html) for Moore-Penrose pseudoinverse in MATLAB).
+
+Thus, the essence of the methods i

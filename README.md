@@ -48,6 +48,7 @@ where **INVERSE_JACOBIAN** is the inverse Jacobian matrix, **DELTA_END_POSE** is
    ```
 * Run the example:
    ```sh
+   source ~/catkin_ws/devel/setup.bash
    roslaunch ur_gazebo ur3.launch 
    ```
 * Test the package by releasing point command on ROS topic `/pose_command`:

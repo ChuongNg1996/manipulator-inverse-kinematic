@@ -1,1 +1,5 @@
-## FK UR3
+# UR3
+
+x_fk = (533*cos(theta_3)*(cos(theta_1)*cos(theta_2) - (4967757600021511*sin(theta_1)*sin(theta_2))/81129638414606681695789005144064))/2500 + (4871*cos(theta_1)*cos(theta_2))/20000 - (533*sin(theta_3)*(cos(theta_1)*sin(theta_2) + (4967757600021511*cos(theta_2)*sin(theta_1))/81129638414606681695789005144064))/2500 - (24197947269704780081*sin(theta_1)*sin(theta_2))/1622592768292133633915780102881280000
+y_fk = (533*cos(theta_3)*((4967757600021511*cos(theta_1)*sin(theta_2))/81129638414606681695789005144064 + cos(theta_2)*sin(theta_1)))/2500 + (533*sin(theta_3)*((4967757600021511*cos(theta_1)*cos(theta_2))/81129638414606681695789005144064 - sin(theta_1)*sin(theta_2)))/2500 + (24197947269704780081*cos(theta_1)*sin(theta_2))/1622592768292133633915780102881280000 + (4871*cos(theta_2)*sin(theta_1))/20000
+z_fk = (4871*sin(theta_2))/20000 + (533*cos(theta_2)*sin(theta_3))/2500 + (533*cos(theta_3)*sin(theta_2))/2500 + 3037/20000

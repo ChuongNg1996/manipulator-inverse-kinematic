@@ -41,7 +41,7 @@ where **INVERSE_JACOBIAN** is the inverse Jacobian matrix, **DELTA_END_POSE** is
 * Go to the created ROS workspace, clone the repo and build them. On terminal: 
    ```sh
    cd ~/catkin_ws/src
-   git clone https://github.com/ChuongNg1996/jetbot-ros-object-following
+   git clone https://github.com/ChuongNg1996/manipulator-inverse-kinematic
    cd ..
    catkin_make
    ```

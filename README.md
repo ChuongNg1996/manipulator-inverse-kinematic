@@ -9,5 +9,5 @@ The project uses:
 * [ROS Framework](http://wiki.ros.org/) (on Ubuntu) to alleviate concurrency management and module communication.
 * [Gazebo](https://gazebosim.org/home) with [UR3 Manipulator](https://github.com/ros-industrial/universal_robot) as testing subject.
 
-## Table of Contents
-1. 
+## Algorithms & Concepts
+

@@ -16,4 +16,8 @@ The flow of the **program** to solve IK for a given **Goal Position of End Effec
 3. Create a For Loop of `I` iterations. At each iteration, compute the **pseudoinverse Jacobian matrix** using `[theta_1, ..., theta_N]`, then multiply it with `[delta_x,delta_y,delta_z]` (or, again, distance between each sub goal) to get the **CHANGE IN ANGLE** of each joint required to the next **Sub Goal** `[delta_theta_1, ..., delta_theta_N]`. Then sum both **Current Joint Positions** `[theta_1, ..., theta_N]` with the **CHANGE IN ANGLE** required `[delta_x,delta_y,delta_z]` to derive the new **Current Joint Positions** `[theta_1, ..., theta_N]` for the next loop.
 4. The final **Current Joint Positions** `[theta_1, ..., theta_N]` will be commanded to the robot to reach **Goal Position of End Effector** `[xr,yr,zr]`
 
-The components are derived as 
+The components are derived:
+* **Goal Position of End Effector** `[xr,yr,zr]` are given by user.
+* **Current Joint Positions** `[theta_1, ..., theta_N]` are read from sensors of each joint.
+* **Current Position of End Effector** `[xf,yf,zf]` is derived from `[theta_1, ..., theta_N]` using **Forward Kinematic**.
+* **Forward Kinematic** are mathematically derived based on robot setting before running the program.

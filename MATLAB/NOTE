@@ -46,7 +46,7 @@ Inv_J
 
 3,1 = -(2.3452*cos(theta_1 - theta_2) + 2.0530*cos(theta_1 + theta_2 + theta_3) + 2.0530*cos(theta_2 - theta_1 + theta_3) + 2.3452*cos(theta_1 + theta_2))/(sin(theta_3))
 3,2 = -(2.3452*sin(theta_1 - theta_2) + 2.0530*sin(theta_1 + theta_2 + theta_3) - 2.0530*sin(theta_2 - theta_1 + theta_3) + 2.3452*sin(theta_1 + theta_2))/(sin(theta_3))
-3,3 = -(17541078581044056409371971486061290614605463424652119541975015078375000*sin(theta_2 + theta_3) + 20038131746778986578342137220592060643466982256444764139061983688265625*sin(theta_2))/(4272129688413279938502543655430243347107893112000122285159782738296832*sin(theta_3))
+3,3 = -(4.1059*sin(theta_2 + theta_3) + 4.6904*sin(theta_2))/(sin(theta_3))
 
 4,1 = 0
 4,2 = 0

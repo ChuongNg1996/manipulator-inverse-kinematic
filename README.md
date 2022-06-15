@@ -20,4 +20,5 @@ The components are derived:
 * **Goal Position of End Effector** `[xr,yr,zr]` are given by user.
 * **Current Joint Positions** `[theta_1, ..., theta_N]` are read from sensors of each joint.
 * **Current Position of End Effector** `[xf,yf,zf]` is derived from `[theta_1, ..., theta_N]` using **Forward Kinematic**.
-* **Forward Kinematic** are mathematically derived based on robot setting before running the program.
+* **Forward Kinematic** formulas are mathematically derived based on robot setting before running the program.
+* **pseudoinverse Jacobian matrix** formulas are mathematically derived based on robot setting before running the program.

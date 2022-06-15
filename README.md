@@ -62,4 +62,11 @@ where **INVERSE_JACOBIAN** is the inverse Jacobian matrix, **DELTA_END_POSE** is
    y: 0.2
    z: 0.2" 
    ```
+## API
+To be updated
 
+## Debugging 
+* Use `rostopic list` to see available ROS topics.
+
+## Other
+(None)

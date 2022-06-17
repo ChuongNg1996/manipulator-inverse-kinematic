@@ -73,6 +73,7 @@ To be updated
 
 ## Debugging 
 * Use `rostopic list` to see available ROS topics.
+* Number of iteration to solve for IK has to be sufficiently large.
 
 ## Other
 (None)

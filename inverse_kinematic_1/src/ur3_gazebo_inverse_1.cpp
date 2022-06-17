@@ -10,7 +10,7 @@
 //-------------         User Variables          -------------//
 static const float joint_tolerance = 0.01;                              // Joint tolerance (rad)
 static const int joint_num = 6;                                         // NUmber of joints
-static const float home_joint[joint_num] = {0.1,0.1,0.1,0.1,0.1};       // Home position in joint (rad)
+static const float home_joint[joint_num] = {0.01,0.01,0.01,0.01,0.01,0.01};       // Home position in joint (rad)
 static const float joint_direction[joint_num] = {1,-1,-1,-1,-1,-1};     // Direction of angle
 static const int iteration_num = 100;   // Number of iteration to solve the angle for IK
 
@@ -241,7 +241,9 @@ int main(int argc, char **argv)
             current_joint[0] = current_joint[0] * joint_direction[0];
             current_joint[1] = current_joint[1] * joint_direction[1];
             current_joint[2] = current_joint[2] * joint_direction[2];
-            current_joint[3] = current_joint[3] * joint_direction[3];
+            //current_joint[3] = current_joint[3] * joint_direction[3];
+            //current_joint[3] = current_joint[3] + (current_joint[2] + current_joint[1]);
+            current_joint[3] = home_joint[3] - (current_joint[2] + current_joint[1]);
 
             std::copy (current_joint,current_joint + joint_num,joint_cmd);
             for (int i = 0; i < joint_num; i++)

@@ -31,7 +31,11 @@ where **INVERSE_JACOBIAN** is the inverse Jacobian matrix, **DELTA_END_POSE** is
 
 <p align="center"> <b> <i> PSEUDO_INVERSE_JACOBIAN * DELTA_END_POSE = DELTA_ANGLE </i> </b> </p>
 
-Assuming that we want to keep the **Orietation** of the **End Effector** the same (e.g. always pointing downward) throughout all operations, then we set such orientation at **HOME Position** for all joints (when the program is initially started) 
+Assuming that we want to keep the **Orietation** of the **End Effector** the same (e.g. always pointing downward) throughout all operations, then we set such orientation at **HOME Position** for all joints (when the program is initially started). And, for **4-DOF articulated robot arm** for example, angle of the 4th joint will be:
+
+<p align="center"> <b> <i> COMMAND_JOINT_4 = HOME_JOINT_4 - (COMMAND_JOINT_2 + COMMAND_JOINT_3) </i> </b> </p>
+
+This is specificed for each arm configuration.
 
 ## Installation & Implementation
 * Install C++.

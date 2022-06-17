@@ -9,11 +9,11 @@
 #include <tuple>
 
 //-------------         User Variables          -------------//
-static const float joint_tolerance = 0.01;                              // Joint tolerance (rad)
+static const float joint_tolerance = 0.001;                              // Joint tolerance (rad)
 static const int joint_num = 6;                                         // NUmber of joints
-static const float home_joint[joint_num] = {0.01,0.01,0.01,0.01,0.01,0.01};       // Home position in joint (rad)
+static const float home_joint[joint_num] = {0.001,0.001,0.001,-1.57,-1.57,0.001};       // Home position in joint (rad)
 static const float joint_direction[joint_num] = {1,-1,-1,-1,-1,-1};     // Direction of angle
-static const int iteration_num = 500;   // Number of iteration to solve the angle for IK
+static const int iteration_num = 100000;   // Number of iteration to solve the angle for IK
 
 //-------------         Generic Variables       -------------//                              
 static bool joint_achieved = 0;                                     // Check if joint angle is reached within joint tolerance
@@ -223,6 +223,15 @@ int main(int argc, char **argv)
             //current_joint[3] = current_joint[3] + (current_joint[2] + current_joint[1]);
             current_joint[3] = home_joint[3] - (current_joint[2] + current_joint[1]);
 
+            //-------------         Display Joint Command        -------------//
+            std::cout << "Joint 1 Command: " << current_joint[0] << std::endl;
+            std::cout << "Joint 2 Command: " << current_joint[1] << std::endl;
+            std::cout << "Joint 2 Command: " << current_joint[2] << std::endl;
+            std::cout << "Joint 3 Command: " << current_joint[3] << std::endl;
+
+            //-------------------------//
+            
+            //-------------         Joint Command: To goal        -------------//
             std::copy (current_joint,current_joint + joint_num,joint_cmd);
             for (int i = 0; i < joint_num; i++)
             {

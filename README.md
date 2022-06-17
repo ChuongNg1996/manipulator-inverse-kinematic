@@ -31,6 +31,8 @@ where **INVERSE_JACOBIAN** is the inverse Jacobian matrix, **DELTA_END_POSE** is
 
 <p align="center"> <b> <i> PSEUDO_INVERSE_JACOBIAN * DELTA_END_POSE = DELTA_ANGLE </i> </b> </p>
 
+Assuming that we want to keep the **Orietation** of the **End Effector** the same (e.g. always pointing downward) throughout all operations, then we set such orientation at **HOME Position** for all joints (when the program is initially started) 
+
 ## Installation & Implementation
 * Install C++.
 * [Install ROS](http://wiki.ros.org/melodic/Installation/Ubuntu) (any version).

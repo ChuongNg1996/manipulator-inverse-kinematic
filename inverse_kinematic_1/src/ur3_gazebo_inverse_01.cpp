@@ -6,14 +6,13 @@
 #include <stdlib.h>
 #include <math.h>
 #include "geometry_msgs/Point.h"
-#include <tuple>
 
 //-------------         User Variables          -------------//
 static const float joint_tolerance = 0.01;                              // Joint tolerance (rad)
 static const int joint_num = 6;                                         // NUmber of joints
 static const float home_joint[joint_num] = {0.01,0.01,0.01,0.01,0.01,0.01};       // Home position in joint (rad)
 static const float joint_direction[joint_num] = {1,-1,-1,-1,-1,-1};     // Direction of angle
-static const int iteration_num = 500;   // Number of iteration to solve the angle for IK
+static const int iteration_num = 100;   // Number of iteration to solve the angle for IK
 
 //-------------         Generic Variables       -------------//                              
 static bool joint_achieved = 0;                                     // Check if joint angle is reached within joint tolerance
@@ -28,9 +27,7 @@ static float x_step;
 static float y_step;
 static float z_step;
 static float joint_step[4];
-static float goal_pose[3] = {0.4,0.2,0.2};
-std::tuple<float, float, float> fk_return;
-std::tuple<float, float, float, float, float, float, float, float, float> pij_return;
+static float goal_pose[3] = {0.4,0,0.15};
 
 std_msgs::Float64MultiArray joint_pose_cmd;
 
@@ -93,32 +90,59 @@ void PoseCommandCallback (const geometry_msgs::Point& msg)
 }
 
 //-------------         Forward Kinematics      -------------//
-
-std::tuple<float, float, float> forward_kinematic (float theta_1, float theta_2, float theta_3, float theta_4)
+float x_fk (float theta_1, float theta_2, float theta_3, float theta_4)
 {
-    float x = ((0.1218*cos(theta_1 - theta_2)) + (0.1066*cos(theta_1 + theta_2 + theta_3)) + (0.1066*cos(theta_2 - theta_1 + theta_3)) + (0.1218*cos(theta_1 + theta_2)));
-    float y = ((0.1218*sin(theta_1 - theta_2)) + (0.1066*sin(theta_1 + theta_2 + theta_3)) - (0.1066*sin(theta_2 - theta_1 + theta_3)) + (0.1218*sin(theta_1 + theta_2)));
-    float z = ((0.2132*sin(theta_2 + theta_3)) + (0.2435*sin(theta_2)) + 0.1519);   
-    return std::make_tuple(x,y,z);
+    return ((0.1218*cos(theta_1 - theta_2)) + (0.1066*cos(theta_1 + theta_2 + theta_3)) + (0.1066*cos(theta_2 - theta_1 + theta_3)) + (0.1218*cos(theta_1 + theta_2)));
+}
+float y_fk (float theta_1, float theta_2, float theta_3, float theta_4)
+{
+    return ((0.1218*sin(theta_1 - theta_2)) + (0.1066*sin(theta_1 + theta_2 + theta_3)) - (0.1066*sin(theta_2 - theta_1 + theta_3)) + (0.1218*sin(theta_1 + theta_2)));
+}
+
+float z_fk (float theta_1, float theta_2, float theta_3, float theta_4)
+{
+    return ((0.2132*sin(theta_2 + theta_3)) + (0.2435*sin(theta_2)) + 0.1519);
 }
 
 //-------------         Inverse Kinematics      -------------//
-
-std::tuple<float, float, float, float, float, float, float, float, float > pseudoinverse_jacobian (float theta_1, float theta_2, float theta_3, float theta_4)
+float inv_j_11 (float theta_1, float theta_2, float theta_3, float theta_4)
 {
-    float inv_j_11 = (-(20000*sin(theta_1))/(4264*cos(theta_2 + theta_3) + 4871*cos(theta_2)));
-    float inv_j_12 = ((20000*cos(theta_1))/(4264*cos(theta_2 + theta_3) + 4871*cos(theta_2)));
-    float inv_j_13 = (-(1.2246e-12)/(4264*cos(theta_2 + theta_3) + 4871*cos(theta_2)));
-    float inv_j_21 = (-(10000*cos(theta_1 - theta_3) + 8.7538e+03*cos(2*theta_2 - theta_1 + 2*theta_3) + 10000*cos(theta_1 + 2*theta_2 + theta_3) + 10000*cos(theta_1 + theta_3) + 1.7508e+04*cos(theta_1) + 10000*cos(2*theta_2 - theta_1 + theta_3) + 8.7538e+03*cos(theta_1 + 2*theta_2 + 2*theta_3))/(4871*sin(theta_2 - theta_3) - 4264*sin(theta_2 + 2*theta_3) - 4871*sin(theta_2 + theta_3) + 4264*sin(theta_2)));
-    float inv_j_22 = (-(10000*sin(theta_1 - theta_3) - 8.7538e+03*sin(2*theta_2 - theta_1 + 2*theta_3) + 10000*sin(theta_1 + 2*theta_2 + theta_3) + 10000*sin(theta_1 + theta_3) + 1.7508e+04*sin(theta_1) - 10000*sin(2*theta_2 - theta_1 + theta_3) + 8.7538e+03*sin(theta_1 + 2*theta_2 + 2*theta_3))/(4871*sin(theta_2 - theta_3) - 4264*sin(theta_2 + 2*theta_3) - 4871*sin(theta_2 + theta_3) + 4264*sin(theta_2)));
-    float inv_j_23 = (-(20000*sin(2*theta_2 + theta_3) + 1.7508e+04*sin(2*theta_2 + 2*theta_3) + 20000*sin(theta_3))/(4871*sin(theta_2 - theta_3) - 4264*sin(theta_2 + 2*theta_3) - 4871*sin(theta_2 + theta_3) + 4264*sin(theta_2)));
-    float inv_j_31 = (-(2.3452*cos(theta_1 - theta_2) + 2.0530*cos(theta_1 + theta_2 + theta_3) + 2.0530*cos(theta_2 - theta_1 + theta_3) + 2.3452*cos(theta_1 + theta_2))/(sin(theta_3)));
-    float inv_j_32 = (-(2.3452*sin(theta_1 - theta_2) + 2.0530*sin(theta_1 + theta_2 + theta_3) - 2.0530*sin(theta_2 - theta_1 + theta_3) + 2.3452*sin(theta_1 + theta_2))/(sin(theta_3)));
-    float inv_j_33 = (-(4.1059*sin(theta_2 + theta_3) + 4.6904*sin(theta_2))/(sin(theta_3)));
-
-    return std::make_tuple(inv_j_11,inv_j_12,inv_j_13,inv_j_21,inv_j_22,inv_j_23,inv_j_31,inv_j_32,inv_j_33);
+    return (-(20000*sin(theta_1))/(4264*cos(theta_2 + theta_3) + 4871*cos(theta_2)));
+}
+float inv_j_12 (float theta_1, float theta_2, float theta_3, float theta_4)
+{
+    return ((20000*cos(theta_1))/(4264*cos(theta_2 + theta_3) + 4871*cos(theta_2)));
+}
+float inv_j_13 (float theta_1, float theta_2, float theta_3, float theta_4)
+{
+    return (-(1.2246e-12)/(4264*cos(theta_2 + theta_3) + 4871*cos(theta_2)));
 }
 
+float inv_j_21 (float theta_1, float theta_2, float theta_3, float theta_4)
+{
+    return (-(10000*cos(theta_1 - theta_3) + 8.7538e+03*cos(2*theta_2 - theta_1 + 2*theta_3) + 10000*cos(theta_1 + 2*theta_2 + theta_3) + 10000*cos(theta_1 + theta_3) + 1.7508e+04*cos(theta_1) + 10000*cos(2*theta_2 - theta_1 + theta_3) + 8.7538e+03*cos(theta_1 + 2*theta_2 + 2*theta_3))/(4871*sin(theta_2 - theta_3) - 4264*sin(theta_2 + 2*theta_3) - 4871*sin(theta_2 + theta_3) + 4264*sin(theta_2)));
+}
+float inv_j_22 (float theta_1, float theta_2, float theta_3, float theta_4)
+{
+    return (-(10000*sin(theta_1 - theta_3) - 8.7538e+03*sin(2*theta_2 - theta_1 + 2*theta_3) + 10000*sin(theta_1 + 2*theta_2 + theta_3) + 10000*sin(theta_1 + theta_3) + 1.7508e+04*sin(theta_1) - 10000*sin(2*theta_2 - theta_1 + theta_3) + 8.7538e+03*sin(theta_1 + 2*theta_2 + 2*theta_3))/(4871*sin(theta_2 - theta_3) - 4264*sin(theta_2 + 2*theta_3) - 4871*sin(theta_2 + theta_3) + 4264*sin(theta_2)));
+}
+float inv_j_23 (float theta_1, float theta_2, float theta_3, float theta_4)
+{
+    return (-(20000*sin(2*theta_2 + theta_3) + 1.7508e+04*sin(2*theta_2 + 2*theta_3) + 20000*sin(theta_3))/(4871*sin(theta_2 - theta_3) - 4264*sin(theta_2 + 2*theta_3) - 4871*sin(theta_2 + theta_3) + 4264*sin(theta_2)));
+}
+
+float inv_j_31 (float theta_1, float theta_2, float theta_3, float theta_4)
+{
+    return (-(2.3452*cos(theta_1 - theta_2) + 2.0530*cos(theta_1 + theta_2 + theta_3) + 2.0530*cos(theta_2 - theta_1 + theta_3) + 2.3452*cos(theta_1 + theta_2))/(sin(theta_3)));
+}
+float inv_j_32 (float theta_1, float theta_2, float theta_3, float theta_4)
+{
+    return (-(2.3452*sin(theta_1 - theta_2) + 2.0530*sin(theta_1 + theta_2 + theta_3) - 2.0530*sin(theta_2 - theta_1 + theta_3) + 2.3452*sin(theta_1 + theta_2))/(sin(theta_3)));
+}
+float inv_j_33 (float theta_1, float theta_2, float theta_3, float theta_4)
+{
+    return (-(4.1059*sin(theta_2 + theta_3) + 4.6904*sin(theta_2))/(sin(theta_3)));
+} 
 
 int main(int argc, char **argv)
 {
@@ -166,12 +190,11 @@ int main(int argc, char **argv)
             current_joint[3] = current_joint[3] * joint_direction[3];
 
             //-------------         Compute Current Pose       -------------//
-            fk_return = forward_kinematic(current_joint[0],current_joint[1],current_joint[2],current_joint[3]);
-            current_pose[0] = std::get<0>(fk_return);
+            current_pose[0] = x_fk(current_joint[0],current_joint[1],current_joint[2],current_joint[3]);
             //std::cout << current_pose[0] << std::endl;
-            current_pose[1] = std::get<1>(fk_return);
+            current_pose[1] = y_fk(current_joint[0],current_joint[1],current_joint[2],current_joint[3]);
             //std::cout << current_pose[1] << std::endl;
-            current_pose[2] = std::get<2>(fk_return);
+            current_pose[2] = z_fk(current_joint[0],current_joint[1],current_joint[2],current_joint[3]);
             //std::cout << current_pose[2] << std::endl;
 
             //-------------         Get delta of each components    -------------//
@@ -182,18 +205,17 @@ int main(int argc, char **argv)
             for (int i = 0; i < iteration_num; i++) 
             {
                 //-------------         Compute (pseudo)inversed Jacobian matrix    -------------//
-                pij_return = pseudoinverse_jacobian(current_joint[0],current_joint[1],current_joint[2],current_joint[3]);
-                float inv_j_11_r = std::get<0>(pij_return);
-                float inv_j_12_r = std::get<1>(pij_return);
-                float inv_j_13_r = std::get<2>(pij_return);
+                float inv_j_11_r = inv_j_11(current_joint[0],current_joint[1],current_joint[2],current_joint[3]);
+                float inv_j_12_r = inv_j_12(current_joint[0],current_joint[1],current_joint[2],current_joint[3]);
+                float inv_j_13_r = inv_j_13(current_joint[0],current_joint[1],current_joint[2],current_joint[3]);
 
-                float inv_j_21_r = std::get<3>(pij_return);
-                float inv_j_22_r = std::get<4>(pij_return);
-                float inv_j_23_r = std::get<5>(pij_return);
+                float inv_j_21_r = inv_j_21(current_joint[0],current_joint[1],current_joint[2],current_joint[3]);
+                float inv_j_22_r = inv_j_22(current_joint[0],current_joint[1],current_joint[2],current_joint[3]);
+                float inv_j_23_r = inv_j_23(current_joint[0],current_joint[1],current_joint[2],current_joint[3]);
 
-                float inv_j_31_r = std::get<6>(pij_return);
-                float inv_j_32_r = std::get<7>(pij_return);
-                float inv_j_33_r = std::get<8>(pij_return);
+                float inv_j_31_r = inv_j_31(current_joint[0],current_joint[1],current_joint[2],current_joint[3]);
+                float inv_j_32_r = inv_j_32(current_joint[0],current_joint[1],current_joint[2],current_joint[3]);
+                float inv_j_33_r = inv_j_33(current_joint[0],current_joint[1],current_joint[2],current_joint[3]);
 
                 float inv_j_41_r = 0;
                 float inv_j_42_r = 0;

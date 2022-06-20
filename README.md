@@ -77,3 +77,6 @@ To be updated
 
 ## Other
 (None)
+
+## To Do
+* inline functions
